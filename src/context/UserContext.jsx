@@ -16,7 +16,7 @@ const datosIniciales = [
   { id: 11, nombre: "Denice Odile Celina Plana", fechaBautismo: "3/10/2025", tieneRecomendacion: "No", haIdoAlTemplo: "No", sacerdoteAaron: "---", iniciatorioInvestidura: "No", notas: "", asistencia: true },
   { id: 12, nombre: "María Antonella Milagros Quipildor", fechaBautismo: "22/6/2025", tieneRecomendacion: "Si", haIdoAlTemplo: "Si", sacerdoteAaron: "---", iniciatorioInvestidura: "No", notas: "", asistencia: true },
   { id: 13, nombre: "Evelyn Del Rosario Romero Garcia", fechaBautismo: "2/3/2025", tieneRecomendacion: "No", haIdoAlTemplo: "No", sacerdoteAaron: "---", iniciatorioInvestidura: "No", notas: "", asistencia: true },
-  { id: 14, nombre: "Jennifer María Salomé Rojas", fechaBautismo: "1/2/2026", tieneRecomendacion: "No", haIdoAlTemplo: "No", sacerdoteAaron: "---", iniciatorioInvestidura: "No", notas: "", asistencia: true },
+  { id: 14, font: "bold", nombre: "Jennifer María Salomé Rojas", fechaBautismo: "1/2/2026", tieneRecomendacion: "No", haIdoAlTemplo: "No", sacerdoteAaron: "---", iniciatorioInvestidura: "No", notas: "", asistencia: true },
   { id: 15, nombre: "Edwin Ezequiel Toledo", fechaBautismo: "9/2/2025", tieneRecomendacion: "No", haIdoAlTemplo: "No", sacerdoteAaron: "No", iniciatorioInvestidura: "No", sacerdoteMelquisedec: "No", notas: "", asistencia: true },
   { id: 16, nombre: "Carlos Ariel Cabrera", fechaBautismo: "22/2/2026", tieneRecomendacion: "No", haIdoAlTemplo: "No", sacerdoteAaron: "Si", iniciatorioInvestidura: "No", sacerdoteMelquisedec: "No", notas: "", asistencia: true },
   { id: 17, nombre: "Thiago Nahuel Cabrera", fechaBautismo: "1/3/2026", tieneRecomendacion: "No", haIdoAlTemplo: "No", sacerdoteAaron: "No", iniciatorioInvestidura: "No", sacerdoteMelquisedec: "No", notas: "Hijo de Ariel", asistencia: true },
@@ -49,8 +49,16 @@ export function UserProvider({ children }) {
     setConversos([...conversos, { ...nuevoConverso, id: Date.now() }]);
   };
 
+  // 🔥 AQUÍ SE AGREGÓ LA FUNCIÓN:
+  const actualizarConverso = (id, campo, nuevoValor) => {
+    setConversos(
+      conversos.map((c) => (c.id === id ? { ...c, [campo]: nuevoValor } : c))
+    );
+  };
+
   return (
-    <UserContext.Provider value={{ user, theme, toggleTheme, logout, login, conversos, agregarConverso }}>
+    // 🔥 AQUÍ SE AGREGÓ "actualizarConverso" EN EL VALUE:
+    <UserContext.Provider value={{ user, theme, toggleTheme, logout, login, conversos, agregarConverso, actualizarConverso }}>
       {children}
     </UserContext.Provider>
   );
