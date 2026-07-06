@@ -2,84 +2,86 @@ import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
 
 export default function ListaConversos() {
-  const { theme, conversos } = useContext(UserContext); // Traemos los conversos globales
+  const { theme, conversos } = useContext(UserContext);
 
   const totalConversos = conversos.length;
   const necesitanApoyo = conversos.filter(c => !c.asistencia).length;
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto">
+    <div className="space-y-6 max-w-5xl mx-auto pb-16">
       <div>
         <h1 className={`text-3xl font-bold ${theme === "light" ? "text-gray-900" : "text-white"}`}>
           Estado de la Obra Misional
         </h1>
-        <p className="text-sm text-gray-500 mt-1">Progreso y hermanamiento de los nuevos miembros del barrio.</p>
+        <p className="text-sm text-gray-500 mt-1">Progreso y convenios de los nuevos miembros del barrio.</p>
       </div>
 
-      {/* LISTA DE TARJETAS */}
+      {/* TARJETAS DE CONVERSOS */}
       <div className="grid grid-cols-1 gap-4">
         {conversos.map((converso) => (
           <div 
-            key={converso.id}
-            className={`p-6 rounded-xl border transition-all ${
-              theme === "light" ? "bg-white border-gray-200" : "bg-gray-800 border-gray-700 text-white"
-            } ${!converso.asistencia ? "border-l-4 border-l-red-500" : "border-l-4 border-l-emerald-500"}`}
+            key={converso.id} 
+            className={`p-5 rounded-xl border border-l-4 transition-all shadow-sm ${
+              converso.asistencia ? "border-l-green-500" : "border-l-red-500"
+            } ${theme === "light" ? "bg-white border-gray-200" : "bg-gray-800 border-gray-700 text-white"}`}
           >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4">
               <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="font-bold text-lg">{converso.nombre}</h2>
-                  <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${
-                    converso.asistencia ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300" : "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300"
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="font-bold text-lg">{converso.nombre}</h3>
+                  <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${
+                    converso.asistencia ? "bg-green-500/10 text-green-500" : "bg-red-500/10 text-red-500"
                   }`}>
                     {converso.asistencia ? "🟢 Asiste" : "🔴 Requiere Visita"}
                   </span>
                 </div>
-                <p className="text-xs text-gray-400 mt-1">
-                  Senda del Convenio: <span className="font-semibold text-indigo-500">{converso.sendaConvenio}</span>
-                </p>
+                <p className="text-xs text-gray-400 mt-1">📅 Bautismo: <span className="text-indigo-400 font-medium">{converso.fechaBautismo}</span></p>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 text-sm">
+              {/* REQUERIMIENTOS GRUPO */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs bg-gray-900/20 p-3 rounded-lg flex-1 lg:max-w-2xl">
                 <div>
-                  <span className="block text-xs font-semibold text-gray-400 uppercase">Hermanamiento</span>
-                  <p className="font-medium">{converso.hermanamiento}</p>
+                  <span className="block text-gray-400 font-semibold uppercase tracking-wider scale-90 origin-left">Rec. Templo</span>
+                  <span className={`font-medium ${converso.tieneRecomendacion === "Si" ? "text-green-400" : "text-gray-400"}`}>{converso.tieneRecomendacion}</span>
                 </div>
                 <div>
-                  <span className="block text-xs font-semibold text-gray-400 uppercase">Entrevista Obispo</span>
-                  <p className="font-medium text-amber-500">{converso.entrevistaObispo}</p>
+                  <span className="block text-gray-400 font-semibold uppercase tracking-wider scale-90 origin-left">Fue al Templo</span>
+                  <span className={`font-medium ${converso.haIdoAlTemplo === "Si" ? "text-green-400" : "text-gray-400"}`}>{converso.haIdoAlTemplo}</span>
+                </div>
+                <div>
+                  <span className="block text-gray-400 font-semibold uppercase tracking-wider scale-90 origin-left">Sacerd. Aarón</span>
+                  <span className="font-medium text-amber-400">{converso.sacreodoteAaron || converso.sacerdoteAaron || "---"}</span>
+                </div>
+                <div>
+                  <span className="block text-gray-400 font-semibold uppercase tracking-wider scale-90 origin-left">Inic. / Invest.</span>
+                  <span className="font-medium text-purple-400">{converso.iniciatorioInvestidura}</span>
                 </div>
               </div>
             </div>
 
-            <div className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-700 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-              📌 <span className="font-semibold text-gray-700 dark:text-gray-300">Necesidad actual:</span> {converso.necesidad}
-            </div>
+            {converso.notas && (
+              <p className="text-xs text-gray-400 mt-3 pt-2 border-t border-gray-700/30">
+                📝 <span className="font-semibold text-gray-300">Notas:</span> {converso.notas}
+              </p>
+            )}
           </div>
         ))}
       </div>
 
-      {/* RESUMEN ESTADÍSTICO INFERIOR */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
+      {/* CONTADORES RESUMEN */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-4">
         <div className={`p-4 rounded-xl border flex items-center gap-4 ${theme === "light" ? "bg-white border-gray-200" : "bg-gray-800 border-gray-700 text-white"}`}>
-          <span className="text-xl p-2 bg-indigo-50 dark:bg-gray-700 text-indigo-500 rounded-lg">👥</span>
+          <div className="p-3 rounded-lg bg-indigo-500/10 text-indigo-500 text-xl">👥</div>
           <div>
-            <p className="text-xs text-gray-400 font-semibold uppercase">Total Conversos</p>
-            <p className="text-base font-bold">{totalConversos} Recientes</p>
+            <p className="text-xs text-gray-400 font-medium">TOTAL CONVERSOS</p>
+            <p className="text-lg font-bold">{totalConversos} Recientes</p>
           </div>
         </div>
         <div className={`p-4 rounded-xl border flex items-center gap-4 ${theme === "light" ? "bg-white border-gray-200" : "bg-gray-800 border-gray-700 text-white"}`}>
-          <span className="text-xl p-2 bg-red-50 dark:bg-gray-700 text-red-500 rounded-lg">⚠️</span>
+          <div className="p-3 rounded-lg bg-red-500/10 text-red-500 text-xl">⚠️</div>
           <div>
-            <p className="text-xs text-gray-400 font-semibold uppercase">No asisten</p>
-            <p className="text-base font-bold text-red-500">{necesitanApoyo} en riesgo</p>
-          </div>
-        </div>
-        <div className={`p-4 rounded-xl border flex items-center gap-4 ${theme === "light" ? "bg-white border-gray-200" : "bg-gray-800 border-gray-700 text-white"}`}>
-          <span className="text-xl p-2 bg-emerald-50 dark:bg-gray-700 text-emerald-500 rounded-lg">🤝</span>
-          <div>
-            <p className="text-xs text-gray-400 font-semibold uppercase">Hermanados</p>
-            <p className="text-base font-bold">100% Asignados</p>
+            <p className="text-xs text-gray-400 font-medium">REQUIEREN VISITA</p>
+            <p className="text-lg font-bold text-red-500">{necesitanApoyo} en riesgo</p>
           </div>
         </div>
       </div>
